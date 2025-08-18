@@ -446,41 +446,46 @@ You can find the code of your language here - https://www.w3schools.com/tags/ref
         </script>
         <script>
             function subscribe() {
-            var email = document.getElementById("subscriberEmail").value;
-            var message = document.getElementById("subscriptionMessage");
-            if (!email.includes("@") || !email.includes(".")) {
-                message.innerHTML = "❌ Please enter a valid email address.";
-                message.style.color = "white";
-                return;
-            }
-            var requestBody = {
-                "Name": "DTW",
-                "Email": email + "+calendar_subscribe",
-                "Message": document.referrer
-            };
-            fetch("https://script.google.com/macros/s/AKfycbz42xFl_59V36k5VJgldCLFRBv9Gw1n2Z6XapMt1V9d_G-deUaoaOYbkqHddM3HnzA/exec", {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json"
-                },
-                mode: 'no-cors',
-                body: JSON.stringify(requestBody)
-                })
-                .then(data => {
-                console.log(data)
-                // if (data.success) {
-                message.innerHTML = "✅ Thank you! You have been subscribed.";
-                message.style.color = "green";
-                document.getElementById("subscriberEmail").value = ""; // Clear input
-                // } else {
-                //     message.innerHTML = "⚠️ Something went wrong. Please try again.";
-                //     message.style.color = "red";
-                // }
-                })
-                .catch(error => {
-                console.error("Error:", error);
-                message.innerHTML = "⚠️ Error: Unable to subscribe at the moment.";
-                message.style.color = "red";
+                var email = document.getElementById("subscriberEmail").value;
+                var message = document.getElementById("subscriptionMessage");
+                if (!email.includes("@") || !email.includes(".")) {
+                    message.innerHTML = "❌ Please enter a valid email address.";
+                    message.style.color = "white";
+                    return;
+                }
+                var requestBody = {
+                    "Name": "DTW",
+                    "Email": email + "+calendar_subscribe",
+                    "Message": document.referrer
+                };
+                fetch("https://script.google.com/macros/s/AKfycbz42xFl_59V36k5VJgldCLFRBv9Gw1n2Z6XapMt1V9d_G-deUaoaOYbkqHddM3HnzA/exec", {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json"
+                    },
+                    mode: 'no-cors',
+                    body: JSON.stringify(requestBody)
+                    })
+                    .then(data => {
+                    console.log(data)
+                    // if (data.success) {
+                    message.innerHTML = "✅ Thank you! You have been subscribed.";
+                    message.style.color = "green";
+                    document.getElementById("subscriberEmail").value = ""; // Clear input
+                    // } else {
+                    //     message.innerHTML = "⚠️ Something went wrong. Please try again.";
+                    //     message.style.color = "red";
+                    // }
+                    })
+                    .catch(error => {
+                    console.error("Error:", error);
+                    message.innerHTML = "⚠️ Error: Unable to subscribe at the moment.";
+                    message.style.color = "red";
+                });
+                gtag('event', 'ads_conversion_subscribe', {
+                    'event_callback': callback,
+                    'event_timeout': 2000,
+                    // <event_parameters>
                 });
             }
         </script>  
