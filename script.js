@@ -78,13 +78,14 @@ function apiCalls() {
   return response.json();      
   })
   .then((events) => {
-  loader.style.display = "none"; // Hide loader
-  eventsContainer.innerHTML = ""; // Clear container
-  
   if (events.length <= eventsCount) {
     return
   }
   eventsCount = events.length; // Store the number of events
+  
+  loader.style.display = "none"; // Hide loader
+  eventsContainer.innerHTML = ""; // Clear container
+  
   if (events.length === 0) {
       eventsContainer.innerHTML = "<p>No upcoming events found.</p>";
       return;
