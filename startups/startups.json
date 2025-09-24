@@ -1,0 +1,35 @@
+{
+    "records": [
+        {
+            "id": "recamN9h9t0Cv2Enb",
+            "fields": {
+                "Industries": "Data, Data Governance",
+                "LinkedIn": "https://www.linkedin.com/company/dryviq/",
+                "Business Model and Tech Focus": "B2B, SaaS, AI",
+                "Headquarters": "Ann Arbor",
+                "Website": "https://dryviq.com/",
+                "Logo": "dryviq.jpeg (https://v5.airtableusercontent.com/v3/u/45/45/1758751200000/hGEQPTKqcfsoXpeUcEBz-w/JWlKF9DEDACFh8sMsqw3DBS5GZUI7GIXxJAAaeFyH01VAS4ssBNiG4mNAIrBtZyjT-_6i_T4m_3QyoLz5ojlLSAZwcjn_qyRpa93kdissddSdnV1VUic24Xuv4VCqYtylFjdkAqwOYIt3nnEiAkeMg/Zt0ctOVcIopd3Ss0JtdoowPpzxa-sJx35Vl1KRPGd84)",
+                "Name": "DryvIQ"
+            },
+            "createdTime": "2023-01-16T18:40:57Z",
+            "table": null,
+            "linkedTables": null
+        },
+        {
+            "id": "recxfqAWEw505oYhw",
+            "fields": {
+                "Industries": "Cyber Security",
+                "LinkedIn": "https://www.linkedin.com/company/duo-security/",
+                "Business Model and Tech Focus": "B2B, SaaS",
+                "Headquarters": "Ann Arbor",
+                "Website": "https://duo.com/",
+                "Logo": "Duo.jfif (https://v5.airtableusercontent.com/v3/u/45/45/1758751200000/yYEFh0Y6uCY-aeXiFi7Ieg/LadooNUGHz5EwSJIEj305MmeuYDSya0sjsE6cO_7C5CpUdDJ7rRhc2KHhi1orTmfQ5LXpiS31-JgOYoTzRbx4O1ZfQk1v6Lw9lEPe4xVrTuG8l_EMf-kaOVF-o6WyPj6OEMoZaOWI81G6HJEXE25eQ/4ZgKLoEfU1_g2qVdNB2tyId5w2N9CkcPEwpLVCfFhVA)",
+                "Name": "Duo Security"
+            },
+            "createdTime": "2023-01-23T17:11:50Z",
+            "table": null,
+            "linkedTables": null
+        }
+    ],
+    "offset": "itrIV6LDIj2ukB77s/recpeSnqm0GSyVrcx"
+}

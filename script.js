@@ -78,23 +78,23 @@ function apiCalls() {
   return response.json();      
   })
   .then((events) => {
-  if (events.length <= eventsCount) {
-    return
-  }
-  eventsCount = events.length; // Store the number of events
-  
-  loader.style.display = "none"; // Hide loader
-  eventsContainer.innerHTML = ""; // Clear container
-  
-  if (events.length === 0) {
-      eventsContainer.innerHTML = "<p>No upcoming events found.</p>";
-      return;
-  }
+    if (events.length <= eventsCount) {
+        return
+    }
+    eventsCount = events.length; // Store the number of events
+    
+    loader.style.display = "none"; // Hide loader
+    eventsContainer.innerHTML = ""; // Clear container
+    
+    if (events.length === 0) {
+        eventsContainer.innerHTML = "<p>No upcoming events found.</p>";
+        return;
+    }
 
-  events.forEach((event) => {
-      eventsContainer.appendChild(getEventCard(event));
-  });
-  setTimeout(function() { apiCalls(); }, 5000);
+    events.forEach((event) => {
+        eventsContainer.appendChild(getEventCard(event));
+    });
+    setTimeout(function() { apiCalls(); }, 5000);
   })
   .catch((error) => {
   // if running in localhost, generate mock data for event list
