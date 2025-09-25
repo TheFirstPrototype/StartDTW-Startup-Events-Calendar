@@ -81,8 +81,9 @@
 
         function fetchStartups() {
           $.ajax({
-            url: "https://www.mistartups.com/v1/datasource/airtable/f4993c3e-57db-457b-bc43-93cc1d46b367/4d0a2b49-e5a4-43af-9df6-e5120fcfaf7b/3f979b35-0d90-42b4-b760-b3b25cac9ce0/3a16b66e-7653-46b2-8891-bf3e017d367f/data",
+            url: API_URL,
             type: "POST",
+            mode: 'no-cors',
             contentType: "application/json; charset=utf-8",
             data: JSON.stringify({
               options: { cellFormat: "string", timeZone: "UTC", userLocale: "en-US" },
@@ -199,8 +200,8 @@
                 $.ajax({
                   url: API_URL,
                   mode: 'no-cors',
-                  type: "POST",
-                  contentType: "application/json; charset=utf-8",
+                  type: 'POST',
+                  contentType: 'application/json; charset=utf-8',
                   data: JSON.stringify({
                     options: { cellFormat: "string", timeZone: "UTC", userLocale: "en-US" },
                     pageContext: null,
