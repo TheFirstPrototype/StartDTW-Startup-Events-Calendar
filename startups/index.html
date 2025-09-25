@@ -48,7 +48,64 @@
         </main>
     </div>
 
-    <script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+      <script>
+        function extractLogoUrl(logoField) {
+          if (!logoField) return "";
+          const match = logoField.match(/\((.*?)\)/);
+          return match ? match[1] : "";
+        }
+
+        function renderCards(records) {
+          const grid = $("#startupGrid");
+          grid.empty();
+          records.forEach(rec => {
+            const f = rec.fields;
+            const logoUrl = extractLogoUrl(f.Logo);
+            const card = $(`
+              <div class="card">
+                ${logoUrl ? `<img src="${logoUrl}" alt="${f.Name} logo">` : ""}
+                <h2>${f.Name || ""}</h2>
+                <p><strong>Industries:</strong> ${f.Industries || ""}</p>
+                <p><strong>Focus:</strong> ${f["Business Model and Tech Focus"] || ""}</p>
+                <p><strong>HQ:</strong> ${f.Headquarters || ""}</p>
+                <div class="links">
+                  ${f.Website ? `<a href="${f.Website}" target="_blank">Website</a>` : ""}
+                  ${f.LinkedIn ? `<a href="${f.LinkedIn}" target="_blank">LinkedIn</a>` : ""}
+                </div>
+              </div>
+            `);
+            grid.append(card);
+          });
+        }
+
+        function fetchStartups() {
+          $.ajax({
+            url: "https://www.mistartups.com/v1/datasource/airtable/f4993c3e-57db-457b-bc43-93cc1d46b367/4d0a2b49-e5a4-43af-9df6-e5120fcfaf7b/3f979b35-0d90-42b4-b760-b3b25cac9ce0/3a16b66e-7653-46b2-8891-bf3e017d367f/data",
+            type: "POST",
+            contentType: "application/json; charset=utf-8",
+            data: JSON.stringify({
+              options: { cellFormat: "string", timeZone: "UTC", userLocale: "en-US" },
+              pageContext: null,
+              filterCriteria: {},
+              pagingOption: { offset: null, count: 150 }
+            }),
+            success: function(data) {
+              renderCards(data.records);
+              $("#search").on("input", function() {
+                const query = $(this).val().toLowerCase();
+                const filtered = data.records.filter(r => r.fields.Name?.toLowerCase().includes(query));
+                renderCards(filtered);
+              });
+            },
+            error: function(err) {
+              console.error("API error:", err);
+            }
+          });
+        }
+
+        $(document).ready(fetchStartups);
+  
         // --- CONFIGURATION ---
         const API_URL = 'https://www.mistartups.com/v1/datasource/airtable/f4993c3e-57db-457b-bc43-93cc1d46b367/4d0a2b49-e5a4-43af-9df6-e5120fcfaf7b/3f979b35-0d90-42b4-b760-b3b25cac9ce0/3a16b66e-7653-46b2-8891-bf3e017d367f/data';
         const RECORDS_PER_PAGE = 150; // Match the count in your API call
@@ -139,12 +196,34 @@
             }
 
             try {
+                $.ajax({
+                  url: API_URL,
+                  mode: 'no-cors',
+                  type: "POST",
+                  contentType: "application/json; charset=utf-8",
+                  data: JSON.stringify({
+                    options: { cellFormat: "string", timeZone: "UTC", userLocale: "en-US" },
+                    pageContext: null,
+                    filterCriteria: {},
+                    pagingOption: { offset: null, count: 150 }
+                  }),
+                  success: function(data) {
+                    renderCards(data.records);
+                    $("#search").on("input", function() {
+                      const query = $(this).val().toLowerCase();
+                      const filtered = data.records.filter(r => r.fields.Name?.toLowerCase().includes(query));
+                      renderCards(filtered);
+                    });
+                  },
+                  error: function(err) {
+                    console.error("API error:", err);
+                  }
+                });
+              
                 const response = await fetch(API_URL, {
                     method: 'POST',
                     mode: 'no-cors',
-                    headers: {
-                        'Content-Type': 'application/json; charset=utf-8'
-                    },
+                    contentType: 'application/json; charset=utf-8',
                     body: JSON.stringify(requestBody)
                 });
 
