@@ -1,141 +1,192 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <title>Michigan Startups Directory</title>
-  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-  <style>
-    body {
-      font-family: Arial, sans-serif;
-      background: #f9fafb;
-      margin: 0;
-      padding: 20px;
-    }
-    h1 {
-      text-align: center;
-      margin-bottom: 20px;
-    }
-    .search-box {
-      display: flex;
-      justify-content: center;
-      margin-bottom: 20px;
-    }
-    .search-box input {
-      padding: 10px;
-      width: 300px;
-      border: 1px solid #ccc;
-      border-radius: 6px;
-    }
-    .grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-      gap: 20px;
-    }
-    .card {
-      background: white;
-      border-radius: 12px;
-      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-      padding: 20px;
-      text-align: center;
-      transition: transform 0.2s, box-shadow 0.2s;
-    }
-    .card:hover {
-      transform: translateY(-4px);
-      box-shadow: 0 4px 12px rgba(0,0,0,0.15);
-    }
-    .card img {
-      max-height: 80px;
-      margin-bottom: 15px;
-      object-fit: contain;
-    }
-    .card h2 {
-      font-size: 18px;
-      margin: 10px 0;
-    }
-    .card p {
-      margin: 4px 0;
-      color: #555;
-      font-size: 14px;
-    }
-    .links a {
-      display: inline-block;
-      margin: 5px;
-      padding: 6px 12px;
-      border: 1px solid #0073e6;
-      border-radius: 6px;
-      text-decoration: none;
-      color: #0073e6;
-      transition: background 0.2s, color 0.2s;
-    }
-    .links a:hover {
-      background: #0073e6;
-      color: white;
-    }
-  </style>
-</head>
-<body>
-  <h1>Michigan Startups Directory</h1>
-  <div class="search-box">
-    <input type="text" id="search" placeholder="Search by name...">
-  </div>
-  <div class="grid" id="startupGrid"></div>
-
-  <script>
-    function extractLogoUrl(logoField) {
-      if (!logoField) return "";
-      const match = logoField.match(/\((.*?)\)/);
-      return match ? match[1] : "";
-    }
-
-    function renderCards(records) {
-      const grid = $("#startupGrid");
-      grid.empty();
-      records.forEach(rec => {
-        const f = rec.fields;
-        const logoUrl = extractLogoUrl(f.Logo);
-        const card = $(`
-          <div class="card">
-            ${logoUrl ? `<img src="${logoUrl}" alt="${f.Name} logo">` : ""}
-            <h2>${f.Name || ""}</h2>
-            <p><strong>Industries:</strong> ${f.Industries || ""}</p>
-            <p><strong>Focus:</strong> ${f["Business Model and Tech Focus"] || ""}</p>
-            <p><strong>HQ:</strong> ${f.Headquarters || ""}</p>
-            <div class="links">
-              ${f.Website ? `<a href="${f.Website}" target="_blank">Website</a>` : ""}
-              ${f.LinkedIn ? `<a href="${f.LinkedIn}" target="_blank">LinkedIn</a>` : ""}
-            </div>
-          </div>
-        `);
-        grid.append(card);
-      });
-    }
-
-    function fetchStartups() {
-      $.ajax({
-        url: "https://www.mistartups.com/v1/datasource/airtable/f4993c3e-57db-457b-bc43-93cc1d46b367/4d0a2b49-e5a4-43af-9df6-e5120fcfaf7b/3f979b35-0d90-42b4-b760-b3b25cac9ce0/3a16b66e-7653-46b2-8891-bf3e017d367f/data",
-        type: "POST",
-        contentType: "application/json; charset=utf-8",
-        data: JSON.stringify({
-          options: { cellFormat: "string", timeZone: "UTC", userLocale: "en-US" },
-          pageContext: null,
-          filterCriteria: {},
-          pagingOption: { offset: null, count: 150 }
-        }),
-        success: function(data) {
-          renderCards(data.records);
-          $("#search").on("input", function() {
-            const query = $(this).val().toLowerCase();
-            const filtered = data.records.filter(r => r.fields.Name?.toLowerCase().includes(query));
-            renderCards(filtered);
-          });
-        },
-        error: function(err) {
-          console.error("API error:", err);
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MI Startups Directory</title>
+    <!-- We'll use Tailwind CSS for rapid, beautiful styling -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        /* A little custom CSS for a smoother experience */
+        body {
+            background-color: #f7fafc;
         }
-      });
-    }
+        .startup-card {
+            transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+        }
+        .startup-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+        }
+    </style>
+</head>
+<body class="font-sans">
 
-    $(document).ready(fetchStartups);
-  </script>
+    <div class="container mx-auto p-4 md:p-8">
+        <header class="text-center mb-12">
+            <h1 class="text-4xl md:text-5xl font-bold text-gray-800">Michigan Startup Directory</h1>
+            <p class="text-lg text-gray-600 mt-2">Discover the next wave of innovation.</p>
+        </header>
+
+        <main>
+            <!-- This is where the startup cards will be injected by JavaScript -->
+            <div id="startups-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">
+                <!-- Card Template (for reference, will be created in JS)
+                <div class="startup-card bg-white rounded-lg shadow-md overflow-hidden p-6 flex flex-col">
+                    ...
+                </div>
+                -->
+            </div>
+            
+            <!-- Loading and Load More Button Container -->
+            <div id="loader-container" class="text-center mt-12">
+                <div id="loader" class="text-blue-600 font-semibold">Loading startups...</div>
+                <button id="load-more-btn" class="hidden bg-blue-600 text-white font-bold py-3 px-8 rounded-lg hover:bg-blue-700 transition-colors">
+                    Load More
+                </button>
+            </div>
+        </main>
+    </div>
+
+    <script>
+        // --- CONFIGURATION ---
+        const API_URL = 'https://www.mistartups.com/v1/datasource/airtable/f4993c3e-57db-457b-bc43-93cc1d46b367/4d0a2b49-e5a4-43af-9df6-e5120fcfaf7b/3f979b35-0d90-42b4-b760-b3b25cac9ce0/3a16b66e-7653-46b2-8891-bf3e017d367f/data';
+        const RECORDS_PER_PAGE = 150; // Match the count in your API call
+
+        // --- STATE MANAGEMENT ---
+        let currentOffset = null;
+        let isLoading = false;
+
+        // --- DOM ELEMENTS ---
+        const grid = document.getElementById('startups-grid');
+        const loader = document.getElementById('loader');
+        const loadMoreBtn = document.getElementById('load-more-btn');
+
+        // --- HELPER FUNCTIONS ---
+
+        /**
+         * Extracts the URL from the Airtable logo string format "filename (url)".
+         * @param {string} logoString - The raw string from the API.
+         * @returns {string|null} The extracted URL or null if not found.
+         */
+        function parseLogoUrl(logoString) {
+            if (!logoString) return null;
+            const match = logoString.match(/\((.*?)\)/);
+            return match ? match[1] : null;
+        }
+
+        /**
+         * Renders an array of startup records into the grid.
+         * @param {Array} records - The array of startup objects from the API.
+         */
+        function renderStartups(records) {
+            records.forEach(record => {
+                const fields = record.fields;
+                const logoUrl = parseLogoUrl(fields.Logo);
+
+                const card = document.createElement('div');
+                card.className = 'startup-card bg-white rounded-lg shadow-md overflow-hidden p-6 flex flex-col space-y-4';
+
+                // Use a generic placeholder if no logo is found
+                const logoHtml = logoUrl 
+                    ? `<img src="${logoUrl}" alt="${fields.Name} Logo" class="h-16 w-16 object-contain mx-auto rounded-md">`
+                    : `<div class="h-16 w-16 bg-gray-200 flex items-center justify-center text-gray-500 font-bold text-2xl mx-auto rounded-md">${fields.Name ? fields.Name.charAt(0) : '?'}</div>`;
+
+                card.innerHTML = `
+                    <div class="flex-grow">
+                        ${logoHtml}
+                        <h2 class="text-xl font-bold text-gray-900 text-center mt-4">${fields.Name || 'N/A'}</h2>
+                        <p class="text-sm text-gray-500 text-center">${fields.Headquarters || 'N/A'}</p>
+                    </div>
+
+                    <div class="text-sm space-y-2 pt-4 border-t">
+                        <p><strong>Industries:</strong> <span class="text-gray-700">${fields.Industries || 'N/A'}</span></p>
+                        <p><strong>Focus:</strong> <span class="text-gray-700">${fields['Business Model and Tech Focus'] || 'N/A'}</span></p>
+                    </div>
+                    
+                    <div class="flex justify-center space-x-4 pt-4 border-t mt-auto">
+                        ${fields.Website ? `<a href="${fields.Website}" target="_blank" rel="noopener noreferrer" class="text-blue-600 hover:underline">Website</a>` : ''}
+                        ${fields.LinkedIn ? `<a href="${fields.LinkedIn}" target="_blank" rel="noopener noreferrer" class="text-blue-600 hover:underline">LinkedIn</a>` : ''}
+                    </div>
+                `;
+                grid.appendChild(card);
+            });
+        }
+
+        // --- API CALL ---
+
+        /**
+         * Fetches startup data from the API.
+         * @param {string|null} offset - The offset for pagination.
+         */
+        async function fetchStartups(offset = null) {
+            if (isLoading) return;
+            isLoading = true;
+            loader.style.display = 'block';
+            loadMoreBtn.classList.add('hidden');
+
+            const requestBody = {
+                options: { cellFormat: "string", timeZone: "UTC", userLocale: "en-US" },
+                pageContext: null,
+                filterCriteria: {},
+                pagingOption: {
+                    count: RECORDS_PER_PAGE
+                }
+            };
+
+            if (offset) {
+                requestBody.pagingOption.offset = offset;
+            }
+
+            try {
+                const response = await fetch(API_URL, {
+                    method: 'POST',
+                    mode: 'no-cors',
+                    headers: {
+                        'Content-Type': 'application/json; charset=utf-8'
+                    },
+                    body: JSON.stringify(requestBody)
+                });
+
+                if (!response.ok) {
+                    throw new Error(`HTTP error! Status: ${response.status}`);
+                }
+
+                const data = await response.json();
+                renderStartups(data.records);
+
+                // Update the offset for the next "Load More" click
+                currentOffset = data.offset;
+
+                // Show or hide the "Load More" button
+                if (currentOffset) {
+                    loadMoreBtn.classList.remove('hidden');
+                } else {
+                    loadMoreBtn.classList.add('hidden');
+                    loader.textContent = "You've reached the end!";
+                }
+
+            } catch (error) {
+                console.error("Failed to fetch startups:", error);
+                loader.textContent = 'Failed to load data. Please try again later.';
+            } finally {
+                isLoading = false;
+                if(currentOffset) {
+                     loader.style.display = 'none';
+                }
+            }
+        }
+
+        // --- INITIALIZATION ---
+        
+        // Add event listener to the button
+        loadMoreBtn.addEventListener('click', () => fetchStartups(currentOffset));
+
+        // Initial fetch when the page loads
+        document.addEventListener('DOMContentLoaded', () => {
+            fetchStartups();
+        });
+
+    </script>
 </body>
 </html>
