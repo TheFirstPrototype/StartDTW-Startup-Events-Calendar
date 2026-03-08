@@ -274,7 +274,7 @@ You can find the code of your language here - https://www.w3schools.com/tags/ref
                                           </button>                      
                                     </div>
                                     
-                                    <div class="form-tip">
+                                    <div class="form-tip" id="subscriptionMessage">
                                         <i class="fa fa-info-circle"></i> Unsubscribe at any time
                                     </div>
                                     
@@ -469,7 +469,7 @@ You can find the code of your language here - https://www.w3schools.com/tags/ref
                     .then(data => {
                     console.log(data)
                     // if (data.success) {
-                    message.innerHTML = "✅ Thank you! You have been subscribed.";
+                    message.innerHTML = "✅ Thank you! You subscribed successfully.";
                     message.style.color = "green";
                     document.getElementById("subscriberEmail").value = ""; // Clear input
                     // } else {
